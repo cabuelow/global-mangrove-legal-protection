@@ -6,14 +6,11 @@ library(tmap)
 library(see)
 library(Hmsc)
 library(bayestestR)
-#library(RColorBrewer)
-#library(scales)
 library(factoextra)
 library(FactoMineR)
 library(GGally)
-#library(ggrepel)
-#library(patchwork)
-logtrans <- function(x) log(x + (min(x[x>0],na.rm = T)*0.33))
+library(patchwork)
+library(scales)
 source('scripts/functions/calculate-residuals.R')
 set.seed(123)
 sf_use_s2(FALSE)
@@ -84,30 +81,44 @@ fviz_screeplot(govpca, addlabels = TRUE) # visualize eigenvalues/variances
 dat$Protection_norm = get_pca_ind(coastprot_pca)$coord[,1]
 dat$Governance_norm = get_pca_ind(govpca)$coord[,1]
 
+####
+# make cumulative ecosystem service index
+####
+
+dat <- dat %>% 
+mutate(across(c(Carbon_norm, Fishing_med_norm, Fishing_min_norm, Fishing_max_norm, Protection_norm), ~rescale(., c(0,1)), .names = '{.col}_scale')) %>% 
+  mutate(ecoserv_min_norm = scale(Carbon_norm_scale + Fishing_min_norm_scale + Protection_norm_scale),
+         ecoserv_med_norm = scale(Carbon_norm_scale + Fishing_med_norm_scale + Protection_norm_scale),
+         ecoserv_max_norm = scale(Carbon_norm_scale + Fishing_max_norm_scale + Protection_norm_scale)) %>% 
+  select(-c(Carbon_norm_scale, Fishing_min_norm_scale, Fishing_med_norm_scale, Fishing_max_norm_scale, Protection_norm_scale))
+  
 # check collinearity of all covariates
 
-ggcorr(select(dat, extent_norm, GDP_pc_norm, Carbon_norm, Fishing_med_norm, Protection_norm, Governance_norm), c('pairwise', 'pearson'), label = T)
+ggcorr(select(dat, extent_norm, GDP_pc_norm, ecoserv_med_norm, Governance_norm), c('pairwise', 'pearson'), label = T)
 
 write.csv(dat, 'data/model-data.csv', row.names = F)
 dat <- read.csv('data/model-data.csv')
 
 #####
 # multivariate regression to relate predictors to presence/absence of law or policy
-####
+######
 # loop through different fishing gap-fills (median, max or min)
 
-gap <- c('Fishing_med_norm', 'Fishing_min_norm', 'Fishing_max_norm')
+#gap <- c('Fishing_med_norm', 'Fishing_min_norm', 'Fishing_max_norm')
+gap <- c('ecoserv_med_norm', 'ecoserv_min_norm', 'ecoserv_max_norm')
 for(h in seq_along(gap)){
   
   # choose fishing gapfill
-  dat2 <- dat %>% pivot_longer(cols = Fishing_med_norm:Fishing_max_norm) %>% 
+  dat2 <- dat %>% 
+    #pivot_longer(cols = Fishing_med_norm:Fishing_max_norm) %>% 
+    pivot_longer(cols = ecoserv_min_norm:ecoserv_max_norm) %>% 
     filter(name == gap[h]) %>% 
-    mutate(name = 'Fishing') %>% 
+    mutate(name = 'Ecoservice') %>% 
     pivot_wider(names_from = 'name', values_from = 'value')
   
   # set up multivariate response and covariates
   y <- as.matrix(dat2 %>% select(Mangrove_policy:Environmental_impact_assessment))
-  x <- dat2 %>% select(extent_norm, GDP_pc_norm, Carbon_norm, Fishing, Protection_norm, Government_type, WB_REGION) %>% 
+  x <- dat2 %>% select(extent_norm, GDP_pc_norm, Ecoservice, Government_type, WB_REGION) %>% 
     mutate(Government_type = as.factor(Government_type), WB_REGION = as.factor(WB_REGION)) %>% 
     mutate(Government_type = relevel(Government_type, ref = 'Unitary independent'))  # make unitary independent the reference level
   
@@ -158,8 +169,10 @@ for(h in seq_along(gap)){
   vardf$cat <- c(colnames(m$XData), 'Residual correlations')
   vardf.long <- vardf %>%
     pivot_longer(Mangrove_policy:Environmental_impact_assessment, names_to = 'Law', values_to = 'Variance_prop') %>% 
-    mutate(cat = recode(cat, extent_norm = 'Relative extent', WB_REGION = 'Geographic region', Government_type = 'Government type', GDP_pc_norm = 'GDP per capita', Protection_norm = 'Coastal protection', Carbon_norm = 'Carbon stocks', Fishing = 'Fisheries')) %>% 
-    mutate(cat = factor(cat, levels = c('Residual correlations', 'Relative extent', 'Coastal protection', 'Fisheries', 'Carbon stocks', 'GDP per capita', 'Government type', 'Geographic region')),
+   # mutate(cat = recode(cat, extent_norm = 'Relative extent', WB_REGION = 'Geographic region', Government_type = 'Government type', GDP_pc_norm = 'GDP per capita', Protection_norm = 'Coastal protection', Carbon_norm = 'Carbon stocks', Fishing = 'Fisheries')) %>% 
+    mutate(cat = recode(cat, extent_norm = 'Relative extent', WB_REGION = 'Geographic region', Government_type = 'Government type', GDP_pc_norm = 'GDP per capita')) %>% 
+   # mutate(cat = factor(cat, levels = c('Residual correlations', 'Relative extent', 'Coastal protection', 'Fisheries', 'Carbon stocks', 'GDP per capita', 'Government type', 'Geographic region')),
+    mutate(cat = factor(cat, levels = c('Residual correlations', 'Relative extent', 'Ecoservice', 'GDP per capita', 'Government type', 'Geographic region')),
            Law = recode(Law, Mangrove_policy = 'Mangrove instrument', Environmental_impact_assessment = 'EIA',
                         Coastal_zone_planning = 'Coastal planning', Community_management = 'Community management',
                         Clearing_restrictions = 'Cutting restrictions', Coordination_mechanism = 'Coordination mechanisms')) %>% 
@@ -181,7 +194,7 @@ for(h in seq_along(gap)){
           plot.title = element_text(size = 10),
           legend.key.size = unit(0.4, 'cm'))
   aa
-  ggsave(paste0('outputs/models/law-variance-explained_', gap[h], '.png'), width = 5, height = 1.8)
+  ggsave(paste0('outputs/model-associations/law-variance-explained_', gap[h], '.png'), width = 5, height = 1.8)
   
   # summarise beta coefficents from posterior distribution, extract mean coefs and credible intervals from each mcmc chain
   
@@ -215,20 +228,23 @@ for(h in seq_along(gap)){
                               'WB_REGIONSub-Saharan Africa' = 'Sub- Saharan Africa',
                               "Government_typeNot fully independent" = 'Not fully indep- endent',
                               "Government_typeFederal" = 'Federal',
-                              extent_norm = 'Relative extent', WB_REGION = 'Geographic region', Government_type = 'Government type', GDP_pc_norm = 'GDP per capita', Protection_norm = 'Coastal Prot- ection', Carbon_norm = 'Carbon stocks', Fishing = 'Fisheries')) %>% 
+                              extent_norm = 'Relative extent', WB_REGION = 'Geographic region', Government_type = 'Government type', Ecoservice = 'Eco- service', GDP_pc_norm = 'GDP per capita')) %>% 
+                              #extent_norm = 'Relative extent', WB_REGION = 'Geographic region', Government_type = 'Government type', GDP_pc_norm = 'GDP per capita', Protection_norm = 'Coastal Prot- ection', Carbon_norm = 'Carbon stocks', Fishing = 'Fisheries')) %>% 
     mutate(response = recode(response, Mangrove_policy = 'Mangrove instrument', Environmental_impact_assessment = 'EIA',
                              Coastal_zone_planning = 'Coastal planning', Community_management = 'Community management',
                              Clearing_restrictions = 'Cutting restrictions', Coordination_mechanism = 'Coordination mechanisms')) %>% 
     mutate(response = factor(response, levels = c('Mangrove instrument','Community management', 'Coastal planning','EIA','Coordination mechanisms', 'Cutting restrictions')))
   
   # save 
-  write.csv(data.frame(beta, model = gap[h]), paste0('outputs/models/p_direction_', gap[h], '.csv'), row.names = F)
+  write.csv(data.frame(beta, model = gap[h]), paste0('outputs/model-associations/p_direction_', gap[h], '.csv'), row.names = F)
   
   # plot probability of +ve or -ve effect
-  # continuous predictors
+
   a <- beta %>% 
-    filter(predictor %in% c('Relative extent', 'GDP per capita', 'Fisheries', 'Carbon stocks', 'Coastal Prot- ection')) %>% 
-    mutate(predictor = factor(predictor, levels = c('Relative extent', 'Coastal Prot- ection', 'Fisheries', 'Carbon stocks', 'GDP per capita'))) %>% 
+    filter(predictor %in% c('Relative extent', 'GDP per capita', 'Eco- service')) %>% 
+    mutate(predictor = factor(predictor, levels = c('Relative extent', 'Eco- service', 'GDP per capita'))) %>% 
+    #filter(predictor %in% c('Relative extent', 'GDP per capita', 'Fisheries', 'Carbon stocks', 'Coastal Prot- ection')) %>% 
+   # mutate(predictor = factor(predictor, levels = c('Relative extent', 'Coastal Prot- ection', 'Fisheries', 'Carbon stocks', 'GDP per capita'))) %>% 
     ggplot() +
     geom_tile(aes(x = predictor, y = response, fill = p_direction_plot)) +
     geom_text(aes(x = predictor, y = response, label=label), size = 3) +
@@ -307,13 +323,13 @@ for(h in seq_along(gap)){
   #ggsave(paste0('outputs/models/law-predictor-associations_WB_region_', h, '.png'), width = 6.2, height = 2)
   
   layout <- '
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA##
-BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA###########
+BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB#
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC#
 '
-  d<-(a + b) +plot_layout(widths = c(1,0.4))
+  d <- (a + b) + plot_layout(widths = c(1,0.65))
   aa/d/c+plot_layout(design = layout)
-  ggsave(paste0('outputs/models/law-predictor-associations_probability_', gap[h], '.png'), height = 6, width = 7)
+  ggsave(paste0('outputs/model-associations/law-predictor-associations_probability_', gap[h], '.png'), height = 6, width = 6)
   
   # use model residuals to identify countries with missing/unexpected laws/policies
   # extract mean and distribution of prediction residuals using all mcmc samples
@@ -367,7 +383,6 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
     mutate(policy = factor(policy, levels = c('Mangrove instrument','Community management', 'Coastal planning','EIA','Coordination mechanisms', 'Cutting restrictions')))
   
   # map countries with high probability of being an outlier (either missing or unexpected), given different focal variables
-  
   map <- World %>% inner_join(map.df, by = 'Jurisdiction')
   
   m2 <- tm_shape(st_crop(World, st_bbox(map))) +
@@ -380,25 +395,33 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
                   labels =  c('Missing', 'Unexpected'), border.alpha = 0, size = 0.4) +
     tm_layout(legend.position = c(0,0), panel.label.size = 0.4, legend.text.size = 0.3)
   m2
-  tmap_save(m2, paste0('outputs/maps/missing-unexpected_all_', gap[h], '.png'), width = 4, height = 2, dpi = 1000)
+  tmap_save(m2, paste0('outputs/model-associations/maps/missing-unexpected_all_', gap[h], '.png'), width = 4, height = 2, dpi = 1000)
   
 }
 
-# make a table of probabilities and save
-
-probs <- do.call(rbind, lapply(list.files('outputs/models/', pattern = 'p_direction', full.names = T), read.csv)) %>% 
+# make a table of probabilities of association and save
+probs <- do.call(rbind, lapply(list.files('outputs/model-associations/', pattern = 'p_direction', full.names = T), read.csv)) %>% 
   mutate(p_direction = round(p_direction, 2)*100) %>% 
+  filter(model %in% gap) %>% 
   pivot_wider(id_cols = c(predictor, response), names_from = 'model', values_from = c('p_direction', 'evidence')) %>% 
-  mutate(Deviation_max_gapfill = p_direction_Fishing_max_norm - p_direction_Fishing_med_norm,
-         Deviation_min_gapfill = p_direction_Fishing_min_norm - p_direction_Fishing_med_norm) %>% 
-  filter(evidence_Fishing_med_norm == 'Yes') %>% 
-  select(-c(p_direction_Fishing_min_norm, p_direction_Fishing_max_norm, evidence_Fishing_med_norm,
-            evidence_Fishing_min_norm, evidence_Fishing_max_norm)) %>% 
-  rename('Probability_assocation' = p_direction_Fishing_med_norm, 'Predictor_variable' = predictor, 'Response_variable' = response) %>% 
-  filter(Predictor_variable %in% c('Carbon stocks', 'GDP per capita', 'Fisheries', 'Coastal Prot- ection', 'Relative extent')) %>% 
-  mutate(Predictor_variable = factor(Predictor_variable, levels = c('Relative extent', 'Coastal Prot- ection', 'Fisheries', 'Carbon stocks', 'GDP per capita')))
+  mutate(Deviation_max_gapfill = p_direction_ecoserv_max_norm - p_direction_ecoserv_med_norm,
+         Deviation_min_gapfill = p_direction_ecoserv_min_norm - p_direction_ecoserv_med_norm) %>% 
+  filter(evidence_ecoserv_med_norm == 'Yes') %>% 
+  select(-c(p_direction_ecoserv_min_norm, p_direction_ecoserv_max_norm, evidence_ecoserv_med_norm,
+            evidence_ecoserv_min_norm, evidence_ecoserv_max_norm)) %>% 
+  rename('Probability_assocation' = p_direction_ecoserv_med_norm, 'Predictor_variable' = predictor, 'Response_variable' = response) %>% 
+  filter(Predictor_variable %in% c('GDP per capita', 'Eco- service', 'Relative extent')) %>% 
+  mutate(Predictor_variable = factor(Predictor_variable, levels = c('Relative extent','Eco- service', 'GDP per capita')))
+  #mutate(Deviation_max_gapfill = p_direction_Fishing_max_norm - p_direction_Fishing_med_norm,
+       #  Deviation_min_gapfill = p_direction_Fishing_min_norm - p_direction_Fishing_med_norm) %>% 
+  #filter(evidence_Fishing_med_norm == 'Yes') %>% 
+  #select(-c(p_direction_Fishing_min_norm, p_direction_Fishing_max_norm, evidence_Fishing_med_norm,
+   #         evidence_Fishing_min_norm, evidence_Fishing_max_norm)) %>% 
+  #rename('Probability_assocation' = p_direction_Fishing_med_norm, 'Predictor_variable' = predictor, 'Response_variable' = response) %>% 
+  #filter(Predictor_variable %in% c('Carbon stocks', 'GDP per capita', 'Fisheries', 'Coastal Prot- ection', 'Relative extent')) %>% 
+  #mutate(Predictor_variable = factor(Predictor_variable, levels = c('Relative extent', 'Coastal Prot- ection', 'Fisheries', 'Carbon stocks', 'GDP per capita')))
 
-write.csv(probs, 'outputs/models/probability-association-table.csv', row.names = F)
+write.csv(probs, 'outputs/model-associations/probability-association-table_ecoservice.csv', row.names = F)
 
 
 

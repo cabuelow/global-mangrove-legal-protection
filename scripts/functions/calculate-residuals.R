@@ -1,3 +1,5 @@
+logtrans <- function(x) log(x + (min(x[x>0],na.rm = T)*0.33))
+
 resid <- function (yobs, ypred, plotds = TRUE, family = "poisson", phis = NULL,
           trial.size = 1) {
   if(family != 'normal'){
