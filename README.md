@@ -8,7 +8,7 @@ Data underpinning the analysis will be made publicly available after the paper h
 
 ##### Main analyses and scripts
 
-**1. 01_cutting-restrictions**: Map and plot explicit cutting restrictions for mangroves and their ecosystem services
+**1. 01_maps-time-series**: Map and plot laws and policies
 
 **2. 02_model-associations**: Run a multivariate Bayesian hierarchical model of associations between socio-ecological conditions and mangrove law/policy adoption
 
