@@ -434,8 +434,7 @@ probs <- do.call(rbind, lapply(list.files('outputs/model-associations/', pattern
   mutate(Predictor_variable = factor(Predictor_variable, levels = c('Relative extent', 'Coastal Prot- ection', 'Fisheries', 'Carbon stocks', 'GDP per capita')))
 
 write.csv(probs, 'outputs/model-associations/probability-association-table_fishing.csv', row.names = F)
-
-
+#write.csv(probs, 'outputs/model-associations/probability-association-table_ecoservice.csv', row.names = F)
 
 
 
