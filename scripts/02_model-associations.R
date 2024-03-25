@@ -115,12 +115,14 @@ for(h in seq_along(gap)){
     pivot_longer(cols = Fishing_med_norm:Fishing_max_norm) %>% 
     #pivot_longer(cols = ecoserv_min_norm:ecoserv_max_norm) %>% 
     filter(name == gap[h]) %>% 
-    mutate(name = 'Ecoservice') %>% 
+    mutate(name = 'Fishing') %>% 
+    #mutate(name = 'Ecoservice') %>% 
     pivot_wider(names_from = 'name', values_from = 'value')
   
   # set up multivariate response and covariates
   y <- as.matrix(dat2 %>% select(Mangrove_policy:Environmental_impact_assessment))
-  x <- dat2 %>% select(extent_norm, GDP_pc_norm, Ecoservice, Government_type, WB_REGION) %>% 
+  x <- dat2 %>% select(extent_norm, GDP_pc_norm, Fishing, Protection_norm, Carbon_norm, Government_type, WB_REGION) %>% 
+  #x <- dat2 %>% select(extent_norm, GDP_pc_norm, Ecoservice, Government_type, WB_REGION) %>% 
     mutate(Government_type = as.factor(Government_type), WB_REGION = as.factor(WB_REGION)) %>% 
     mutate(Government_type = relevel(Government_type, ref = 'Unitary independent'))  # make unitary independent the reference level
   
@@ -324,14 +326,22 @@ for(h in seq_along(gap)){
   
   #ggsave(paste0('outputs/models/law-predictor-associations_WB_region_', h, '.png'), width = 6.2, height = 2)
   
-  layout <- '
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA###########
-BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB#
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC#
-'
-  d <- (a + b) + plot_layout(widths = c(1,0.65))
+#  layout <- '
+#AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA###########
+#BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB#
+#CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC#
+#'
+
+   layout <- '
+  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA##
+  BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB#
+  CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC#
+  '
+  
+  d <- (a + b) + plot_layout(widths = c(1,0.4))
+  #d <- (a + b) + plot_layout(widths = c(1,0.65))
   aa/d/c+plot_layout(design = layout)
-  ggsave(paste0('outputs/model-associations/law-predictor-associations_probability_', gap[h], '.png'), height = 6, width = 6)
+  ggsave(paste0('outputs/model-associations/law-predictor-associations_probability_', gap[h], '.png'), height = 6, width = 6.5)
   
   # use model residuals to identify countries with missing/unexpected laws/policies
   # extract mean and distribution of prediction residuals using all mcmc samples
@@ -423,7 +433,7 @@ probs <- do.call(rbind, lapply(list.files('outputs/model-associations/', pattern
   filter(Predictor_variable %in% c('Carbon stocks', 'GDP per capita', 'Fisheries', 'Coastal Prot- ection', 'Relative extent')) %>% 
   mutate(Predictor_variable = factor(Predictor_variable, levels = c('Relative extent', 'Coastal Prot- ection', 'Fisheries', 'Carbon stocks', 'GDP per capita')))
 
-write.csv(probs, 'outputs/model-associations/probability-association-table_ecoservice.csv', row.names = F)
+write.csv(probs, 'outputs/model-associations/probability-association-table_fishing.csv', row.names = F)
 
 
 
