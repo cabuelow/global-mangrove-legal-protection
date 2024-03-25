@@ -95,7 +95,7 @@ dat$Governance_norm = get_pca_ind(govpca)$coord[,1]
   
 # check collinearity of all covariates
 
-#ggcorr(select(dat, extent_norm, GDP_pc_norm, ecoserv_med_norm, Governance_norm), c('pairwise', 'pearson'), label = T)
+#ggcorr(select(dat, extent_norm, GDP_pc_norm, ecoserv_med_norm, ecoserv_min_norm, ecoserv_max_norm, Governance_norm), c('pairwise', 'pearson'), label = T)
 ggcorr(select(dat, extent_norm, GDP_pc_norm, Carbon_norm, Fishing_med_norm, Fishing_min_norm, Fishing_max_norm, Protection_norm, Governance_norm), c('pairwise', 'pearson'), label = T)
 
 write.csv(dat, 'data/model-data.csv', row.names = F)
