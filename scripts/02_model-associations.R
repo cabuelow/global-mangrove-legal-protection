@@ -40,9 +40,9 @@ dat <- read.csv('data/law-policy-database.csv') %>%
          people_protected = protection_num_people/gmw_area_2020_ha, # people protected per hectare of mangroves
          property_protected = protection_property_USD_billion/gmw_area_2020_ha, # property protected per hectare of mangroves
          Carbon = mean_abovegroundcarbon_MtCO2e_ha + mean_soilcarbon_MtCO2e_ha, # total above and below ground carbon
-         Fishing_med = fishing_pressure_median_medgap, # this is per fisher days/km2
-         Fishing_min = fishing_pressure_median_mingap, # this is per fisher days/km2
-         Fishing_max = fishing_pressure_median_maxgap, # this is per fisher days/km2
+         Fishing_med = fishing_pressure_median_medgap, # this is median fisher days/km2
+         Fishing_min = fishing_pressure_median_mingap, # this is median fisher days/km2
+         Fishing_max = fishing_pressure_median_maxgap, # this is median fisher days/km2
          Government_type = case_when(Federal_status == 'Y' ~ 'Federal',
                                      Federal_status == 'N' ~ 'Unitary independent',
                                      Territory_status == 3 ~ 'Not fully independent',
@@ -58,7 +58,7 @@ dat <- read.csv('data/law-policy-database.csv') %>%
                                            Coastal_zone_planning == 'Y' ~ 1)) %>%
   mutate(Coordination_mechanism = ifelse(Coordination_mechanism == 2, 1, 0), # only present if its a 2
          Clearing_restrictions = ifelse(Clearing_restrictions != 0, 1, 0)) %>% # present if its a 1,2, or 3
-  mutate(WB_REGION = ifelse(WB_REGION == 'Europe & Central Asia', 'North America', WB_REGION)) %>%  # grouping Europe (really France) and North America together
+  mutate(WB_REGION = ifelse(WB_REGION == 'Europe & Central Asia', 'North America', WB_REGION)) %>%  # grouping France and North America together
   mutate(WB_REGION = ifelse(WB_REGION == 'North America', 'North America & Europe', WB_REGION))
 
 #####
@@ -177,10 +177,10 @@ for(h in seq_along(gap)){
     #mutate(cat = recode(cat, extent_norm = 'Relative extent', WB_REGION = 'Geographic region', Government_type = 'Government type', GDP_pc_norm = 'GDP per capita')) %>% 
     mutate(cat = factor(cat, levels = c('Residual correlations', 'Relative extent', 'Coastal protection', 'Fisheries', 'Carbon stocks', 'GDP per capita', 'Government type', 'Geographic region')),
     #mutate(cat = factor(cat, levels = c('Residual correlations', 'Relative extent', 'Ecoservice', 'GDP per capita', 'Government type', 'Geographic region')),
-           Law = recode(Law, Mangrove_policy = 'Mangrove instrument', Environmental_impact_assessment = 'EIA',
+           Law = recode(Law, Mangrove_policy = 'Mangrove policy', Environmental_impact_assessment = 'EIA',
                         Coastal_zone_planning = 'Coastal planning', Community_management = 'Community management',
                         Clearing_restrictions = 'Cutting restrictions', Coordination_mechanism = 'Coordination mechanisms')) %>% 
-    mutate(Law = factor(Law, levels = c('Mangrove instrument','Community management', 'Coastal planning','EIA','Coordination mechanisms', 'Cutting restrictions')))
+    mutate(Law = factor(Law, levels = c('Mangrove policy','Community management', 'Coastal planning','EIA','Coordination mechanisms', 'Cutting restrictions')))
   write.csv(vardf.long, paste0('outputs/model-associations/proportion-variance-explained_', gap[h], '.csv'), row.names = F)
   
   aa <- ggplot(vardf.long) +
@@ -232,11 +232,11 @@ for(h in seq_along(gap)){
                               "Government_typeNot fully independent" = 'Not fully indep- endent',
                               "Government_typeFederal" = 'Federal',
                               #extent_norm = 'Relative extent', WB_REGION = 'Geographic region', Government_type = 'Government type', Ecoservice = 'Eco- service', GDP_pc_norm = 'GDP per capita')) %>% 
-                              extent_norm = 'Relative extent', WB_REGION = 'Geographic region', Government_type = 'Government type', GDP_pc_norm = 'GDP per capita', Protection_norm = 'Coastal Prot- ection', Carbon_norm = 'Carbon stocks', Fishing = 'Fisheries')) %>% 
-    mutate(response = recode(response, Mangrove_policy = 'Mangrove instrument', Environmental_impact_assessment = 'EIA',
+                              extent_norm = 'Relative extent', WB_REGION = 'Geographic region', Government_type = 'Government type', GDP_pc_norm = 'GDP per capita', Protection_norm = 'Coastal prot- ection', Carbon_norm = 'Carbon stocks', Fishing = 'Fisheries')) %>% 
+    mutate(response = recode(response, Mangrove_policy = 'Mangrove policy', Environmental_impact_assessment = 'EIA',
                              Coastal_zone_planning = 'Coastal planning', Community_management = 'Community management',
                              Clearing_restrictions = 'Cutting restrictions', Coordination_mechanism = 'Coordination mechanisms')) %>% 
-    mutate(response = factor(response, levels = c('Mangrove instrument','Community management', 'Coastal planning','EIA','Coordination mechanisms', 'Cutting restrictions')))
+    mutate(response = factor(response, levels = c('Mangrove policy','Community management', 'Coastal planning','EIA','Coordination mechanisms', 'Cutting restrictions')))
   
   # save 
   write.csv(data.frame(beta, model = gap[h]), paste0('outputs/model-associations/p_direction_', gap[h], '.csv'), row.names = F)
@@ -246,8 +246,8 @@ for(h in seq_along(gap)){
   a <- beta %>% 
     #filter(predictor %in% c('Relative extent', 'GDP per capita', 'Eco- service')) %>% 
     #mutate(predictor = factor(predictor, levels = c('Relative extent', 'Eco- service', 'GDP per capita'))) %>% 
-    filter(predictor %in% c('Relative extent', 'GDP per capita', 'Fisheries', 'Carbon stocks', 'Coastal Prot- ection')) %>% 
-    mutate(predictor = factor(predictor, levels = c('Relative extent', 'Coastal Prot- ection', 'Fisheries', 'Carbon stocks', 'GDP per capita'))) %>% 
+    filter(predictor %in% c('Relative extent', 'GDP per capita', 'Fisheries', 'Carbon stocks', 'Coastal prot- ection')) %>% 
+    mutate(predictor = factor(predictor, levels = c('Relative extent', 'Coastal prot- ection', 'Fisheries', 'Carbon stocks', 'GDP per capita'))) %>% 
     ggplot() +
     geom_tile(aes(x = predictor, y = response, fill = p_direction_plot)) +
     geom_text(aes(x = predictor, y = response, label=label), size = 3) +
@@ -300,10 +300,10 @@ for(h in seq_along(gap)){
     summarise_at(vars(Mangrove_policy:Environmental_impact_assessment), ~sum(.)/n()) %>% 
     pivot_longer(cols = -WB_REGION, names_to = 'law', values_to = 'proportion') %>% 
     mutate(WB_REGION = recode(WB_REGION, 'Latin America & Caribbean' = 'Latin America & Cari- bbean','Sub-Saharan Africa' = 'Sub- Saharan Africa')) %>% 
-    mutate(law = recode(law, Mangrove_policy = 'Mangrove instrument', Environmental_impact_assessment = 'EIA',
+    mutate(law = recode(law, Mangrove_policy = 'Mangrove policy', Environmental_impact_assessment = 'EIA',
                         Coastal_zone_planning = 'Coastal planning', Community_management = 'Community management',
                         Clearing_restrictions = 'Cutting restrictions', Coordination_mechanism = 'Coordination mechanisms')) %>% 
-    mutate(law = factor(law, levels = c('Mangrove instrument','Community management', 'Coastal planning','EIA','Coordination mechanisms', 'Cutting restrictions'))) %>% 
+    mutate(law = factor(law, levels = c('Mangrove policy','Community management', 'Coastal planning','EIA','Coordination mechanisms', 'Cutting restrictions'))) %>% 
     ggplot() +
     geom_tile(aes(x = WB_REGION, y =law, fill = proportion)) +
     scale_fill_distiller(palette = 'BuGn', 
@@ -388,10 +388,10 @@ for(h in seq_along(gap)){
     left_join(codes) %>% 
     pivot_longer(cols= Mangrove_policy:Environmental_impact_assessment, names_to = 'policy', values_to = 'outcome') %>% 
     mutate(label = ifelse(!is.na(outcome), Jurisdiction, NA)) %>% 
-    mutate(policy = recode(policy, Mangrove_policy = 'Mangrove instrument', Environmental_impact_assessment = 'EIA',
+    mutate(policy = recode(policy, Mangrove_policy = 'Mangrove policy', Environmental_impact_assessment = 'EIA',
                            Coastal_zone_planning = 'Coastal planning', Community_management = 'Community management',
                            Clearing_restrictions = 'Cutting restrictions', Coordination_mechanism = 'Coordination mechanisms')) %>% 
-    mutate(policy = factor(policy, levels = c('Mangrove instrument','Community management', 'Coastal planning','EIA','Coordination mechanisms', 'Cutting restrictions')))
+    mutate(policy = factor(policy, levels = c('Mangrove policy','Community management', 'Coastal planning','EIA','Coordination mechanisms', 'Cutting restrictions')))
   
   # map countries with high probability of being an outlier (either missing or unexpected)
   map <- World %>% inner_join(map.df, by = 'Jurisdiction')
@@ -429,8 +429,8 @@ probs <- do.call(rbind, lapply(list.files('outputs/model-associations/', pattern
   select(-c(p_direction_Fishing_min_norm, p_direction_Fishing_max_norm, evidence_Fishing_med_norm,
             evidence_Fishing_min_norm, evidence_Fishing_max_norm)) %>% 
   rename('Probability_assocation' = p_direction_Fishing_med_norm, 'Predictor_variable' = predictor, 'Response_variable' = response) %>% 
-  filter(Predictor_variable %in% c('Carbon stocks', 'GDP per capita', 'Fisheries', 'Coastal Prot- ection', 'Relative extent')) %>% 
-  mutate(Predictor_variable = factor(Predictor_variable, levels = c('Relative extent', 'Coastal Prot- ection', 'Fisheries', 'Carbon stocks', 'GDP per capita')))
+  filter(Predictor_variable %in% c('Carbon stocks', 'GDP per capita', 'Fisheries', 'Coastal prot- ection', 'Relative extent')) %>% 
+  mutate(Predictor_variable = factor(Predictor_variable, levels = c('Relative extent', 'Coastal prot- ection', 'Fisheries', 'Carbon stocks', 'GDP per capita')))
 
 write.csv(probs, 'outputs/model-associations/probability-association-table_fishing.csv', row.names = F)
 #write.csv(probs, 'outputs/model-associations/probability-association-table_ecoservice.csv', row.names = F)
