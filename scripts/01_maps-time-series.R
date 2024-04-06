@@ -1,4 +1,4 @@
-# map and plot explicit cutting restrictions for mangroves and their ecosystem services
+# maps, ecosystem service, and time-series plots for mangrove laws
 
 library(tidyverse)
 library(sf)
@@ -43,7 +43,7 @@ dat <- read.csv('data/law-policy-database.csv') %>%
   mutate(Government_type = ifelse(Territory_status == 3, 'Not fully independent', Government_type)) %>% 
   left_join(nat_covar, 'Country')
 
-dat2 <- select(euro_terr, SOVEREIGN1, TERRITORY1, Juris_ISO) %>% # make data for territories of European sovereign nations
+dat2 <- select(euro_terr, SOVEREIGN1, TERRITORY1, Juris_ISO) %>% # make rows for territories of European sovereign nations
   left_join(select(dat, -Juris_ISO), by = c('SOVEREIGN1' = 'TERRITORY1'))
 
 datmap <- dat %>% 
@@ -100,6 +100,7 @@ ggsave('outputs/maps-time-series/other/clearing-restrictions_coverage_Level123.p
 # save total values for each bar in .csv for annotating plot later
 datsum <- dat %>% 
   mutate(num = 1) %>% 
+  mutate(Clearing_restrictions = ifelse(Clearing_restrictions == 'None', 'None', 'ClearingRestriction')) %>% 
   group_by(Clearing_restrictions) %>% 
   summarise(`Number of Jurisdictions` = sum(num),
             `Global mangrove extent (km2)` = sum(gmw_area_2020_ha)/100, # convert to km2
