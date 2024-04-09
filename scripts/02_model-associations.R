@@ -121,19 +121,20 @@ for(h in seq_along(gap)){
   
   # set up multivariate response and covariates
   y <- as.matrix(dat2 %>% select(Mangrove_policy:Environmental_impact_assessment))
-  x <- dat2 %>% select(extent_norm, GDP_pc_norm, Fishing, Protection_norm, Carbon_norm, Government_type, WB_REGION) %>% 
+  x <- dat2 %>% select(extent_norm, GDP_pc_norm, Fishing, Protection_norm, Carbon_norm, Government_type) %>% 
   #x <- dat2 %>% select(extent_norm, GDP_pc_norm, Ecoservice, Government_type, WB_REGION) %>% 
-    mutate(Government_type = as.factor(Government_type), WB_REGION = as.factor(WB_REGION)) %>% 
+    mutate(Government_type = as.factor(Government_type)) %>% 
     mutate(Government_type = relevel(Government_type, ref = 'Unitary independent'))  # make unitary independent the reference level
   
-  # set up random effect for residual covariation
-  studyDesign <- data.frame(sample = as.factor(1:nrow(dat2)))
+  # set up random effect for residual covariation and geographic region
+  studyDesign <- data.frame(sample = as.factor(1:nrow(dat2)), geographicregion = as.factor(dat2$WB_REGION))
   rL <- HmscRandomLevel(units = studyDesign$sample) # random effect at country level to estimate residual covariation
+  rL2 <- HmscRandomLevel(units = studyDesign$geographicregion) # random effect for geographic region
   
   m <- Hmsc(Y = y, XData = x, 
             XFormula = as.formula(paste('~', paste(colnames(x), collapse = '+'))),
             studyDesign = studyDesign, 
-            ranLevels = list('sample' = rL),
+            ranLevels = list('sample' = rL, 'geographicregion' = rL2),
             distr = 'probit')
   
   # run model
@@ -169,10 +170,10 @@ for(h in seq_along(gap)){
   laws <- colnames(m$Y)
   VP <- computeVariancePartitioning(m)
   vardf <- data.frame(VP$vals)
-  vardf$cat <- c(colnames(m$XData), 'Residual correlations')
+  vardf$cat <- c(colnames(m$XData), 'Residual correlations', 'Geographic region')
   vardf.long <- vardf %>%
     pivot_longer(Mangrove_policy:Environmental_impact_assessment, names_to = 'Law', values_to = 'Variance_prop') %>% 
-    mutate(cat = recode(cat, extent_norm = 'Relative extent', WB_REGION = 'Geographic region', Government_type = 'Government type', GDP_pc_norm = 'GDP per capita', Protection_norm = 'Coastal protection', Carbon_norm = 'Carbon stocks', Fishing = 'Fisheries')) %>% 
+    mutate(cat = recode(cat, extent_norm = 'Relative extent', Government_type = 'Government type', GDP_pc_norm = 'GDP per capita', Protection_norm = 'Coastal protection', Carbon_norm = 'Carbon stocks', Fishing = 'Fisheries')) %>% 
     #mutate(cat = recode(cat, extent_norm = 'Relative extent', WB_REGION = 'Geographic region', Government_type = 'Government type', GDP_pc_norm = 'GDP per capita')) %>% 
     mutate(cat = factor(cat, levels = c('Residual correlations', 'Relative extent', 'Coastal protection', 'Fisheries', 'Carbon stocks', 'GDP per capita', 'Government type', 'Geographic region')),
     #mutate(cat = factor(cat, levels = c('Residual correlations', 'Relative extent', 'Ecoservice', 'GDP per capita', 'Government type', 'Geographic region')),
@@ -223,15 +224,10 @@ for(h in seq_along(gap)){
     mutate(p_direction_plot = ifelse(mean>0, p_direction, 1-p_direction)) %>% 
     mutate(label = ifelse(evidence == 'Yes', p_direction, NA)) %>% 
     mutate(label = round(label, 2)*100) %>%
-    mutate(predictor = recode(predictor,'WB_REGIONLatin America & Caribbean' = 'Latin America & Cari- bbean',
-                              'WB_REGIONMiddle East & North Africa' = 'Middle East & North Africa',
-                              'WB_REGIONNorth America & Europe' = 'North America & Europe',
-                              'WB_REGIONSouth Asia' = 'South Asia',
-                              'WB_REGIONSub-Saharan Africa' = 'Sub- Saharan Africa',
-                              "Government_typeNot fully independent" = 'Not fully indep- endent',
+    mutate(predictor = recode(predictor, "Government_typeNot fully independent" = 'Not fully indep- endent',
                               "Government_typeFederal" = 'Federal',
-                              #extent_norm = 'Relative extent', WB_REGION = 'Geographic region', Government_type = 'Government type', Ecoservice = 'Eco- service', GDP_pc_norm = 'GDP per capita')) %>% 
-                              extent_norm = 'Relative extent', WB_REGION = 'Geographic region', Government_type = 'Government type', GDP_pc_norm = 'GDP per capita', Protection_norm = 'Coastal prot- ection', Carbon_norm = 'Carbon stocks', Fishing = 'Fisheries')) %>% 
+                              #extent_norm = 'Relative extent', Government_type = 'Government type', Ecoservice = 'Eco- service', GDP_pc_norm = 'GDP per capita')) %>% 
+                              extent_norm = 'Relative extent', Government_type = 'Government type', GDP_pc_norm = 'GDP per capita', Protection_norm = 'Coastal prot- ection', Carbon_norm = 'Carbon stocks', Fishing = 'Fisheries')) %>% 
     mutate(response = recode(response, Mangrove_policy = 'Mangrove policy', Environmental_impact_assessment = 'EIA',
                              Coastal_zone_planning = 'Coastal planning', Community_management = 'Community management',
                              Clearing_restrictions = 'Cutting restrictions', Coordination_mechanism = 'Coordination mechanisms')) %>% 
