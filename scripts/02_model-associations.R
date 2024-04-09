@@ -168,7 +168,6 @@ for(h in seq_along(gap)){
   
   laws <- colnames(m$Y)
   VP <- computeVariancePartitioning(m)
-  plotVariancePartitioning(m, VP = VP)
   vardf <- data.frame(VP$vals)
   vardf$cat <- c(colnames(m$XData), 'Residual correlations')
   vardf.long <- vardf %>%
