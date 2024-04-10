@@ -137,7 +137,7 @@ gmw_wdpa <- gmw_wdpa %>% rbind(data.frame(Juris_ISO = c('France_FRA', 'Netherlan
 ### Shoreline length (** Note this is high resolution (30m) shoreline length with very small islands)
 #####
 
-shore <- read.csv('data/covariate-data/shoreline-length-eez-gmwv3_crop.csv') %>% 
+shore <- read.csv('data/covariate-data/shoreline-length-eez-gmwv3_crop.csv') %>% # this is shoreline cropped to max and min latitude of mapped mangrove extent
   mutate(ISO_code = ifelse(is.na(ISO_TER1), ISO_SOV1, ISO_TER1)) %>% 
   mutate(Jurisdiction = ifelse(is.na(TERRITORY1), SOVEREIGN1, TERRITORY1)) %>% 
   mutate(ISO_code = ifelse(!is.na(ISO_SOV2), paste0(.$ISO_code, '_', .$ISO_SOV2), ISO_code)) %>% 
@@ -149,7 +149,7 @@ shore <- read.csv('data/covariate-data/shoreline-length-eez-gmwv3_crop.csv') %>%
   summarise(Shoreline_length_m = sum(Shoreline_length_m)) %>% 
   filter(!ISO_code %in% c('FRA', 'GBR', 'NLD'))
 
-shore_mang <- read.csv('data/covariate-data/gmw_v3_2020_vec_landeez_shoreline_v3.csv') %>% 
+shore_mang <- read.csv('data/covariate-data/gmw_v3_2020_vec_landeez_shoreline_v3.csv') %>% # this is shoreline length that has mangroves
   mutate(ISO_code = ifelse(is.na(ISO_TER1), ISO_SOV1, ISO_TER1)) %>% 
   mutate(Jurisdiction = ifelse(is.na(TERRITORY1), SOVEREIGN1, TERRITORY1)) %>% 
   mutate(ISO_code = ifelse(!is.na(ISO_SOV2), paste0(.$ISO_code, '_', .$ISO_SOV2), ISO_code)) %>% 
