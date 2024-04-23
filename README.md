@@ -1,6 +1,6 @@
 ### Global laws and policies protecting mangroves
 
-This repository contains code and data to reproduce analyses and figures for *Slobodian et al. (in prep). Quantifying the presence and potential of national legal frameworks for mangrove protection globally*.
+This repository contains code and data to reproduce analyses and figures for *Slobodian et al. (submitted). Quantifying the presence and potential of national legal frameworks for mangrove protection globally*.
 
 #### Scripts
 
