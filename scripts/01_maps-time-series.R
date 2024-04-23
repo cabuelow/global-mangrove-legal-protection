@@ -89,7 +89,7 @@ dat_p %>%
   filter(Clearing_restrictions != 'None') %>% 
   ggplot() +
   geom_bar(aes(x = percent_coverage, y = indicator, fill = forcats::fct_rev(factor(Clearing_restrictions))), position="stack", stat="identity") +
-  scale_fill_manual(values = c('darkslategray3', 'darkslategray4','darkslategrey')) +
+  scale_fill_manual(values = c('darkslategrey', 'darkslategray4', 'darkslategray3')) +
   ylab('') +
   xlab('Percentage') +
   xlim(c(0,100)) +
@@ -132,7 +132,7 @@ dat %>%
   geom_area() +
   xlab('Year') +
   ylab('Cumulative number of jurisdictions') +
-  scale_fill_manual(values = c('darkslategray3', 'darkslategray4','darkslategrey')) +
+  scale_fill_manual(values = c('darkslategrey', 'darkslategray4', 'darkslategray3')) +
   theme_classic() +
   theme(legend.title = element_blank(),
         legend.position = c(0.2,0.8))
