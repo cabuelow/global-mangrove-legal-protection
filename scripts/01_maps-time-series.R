@@ -183,7 +183,7 @@ m2 <- tm_shape(World) +
   tm_shape(world.p) +
   tm_polygons('Coordination_mechanism', palette = c('darkgrey', 'aquamarine3', 'aquamarine4'), 
               lwd = 0.1, title = '', legend.is.portrait = F) +
-  tm_layout(frame = F, legend.position = c(0.63,0.2))
+  tm_layout(frame = F, legend.position = c(0.50,0.08))
 m2  
 tmap_save(m2, 'outputs/maps-time-series/maps/coordination-mechanism_map.png', dpi = 1000)
 
@@ -209,7 +209,7 @@ dat %>%
   scale_fill_manual(values = c('aquamarine3', 'aquamarine4')) +
   theme_classic() +
   theme(legend.title = element_blank(),
-        legend.position = c(0.2,0.8))
+        legend.position = c(0.3,0.8))
 
 ggsave('outputs/maps-time-series/time-series/coordination-mechanism_time-series.png', width = 4, height = 3)
 
