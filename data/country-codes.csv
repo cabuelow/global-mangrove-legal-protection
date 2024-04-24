@@ -1,0 +1,117 @@
+Country,Assessment,WB_CODE,TERRITORY1,ISO_TER1,SOVEREIGN1,ISO_SOV1,FLD_PROTECTION,ISO_code,Jurisdiction,Juris_ISO
+American Samoa,Partial,ASM,American Samoa,ASM,United States,USA,AmericanSamoa,ASM,American Samoa,American Samoa_ASM
+Angola,Full,AGO,Angola,AGO,Angola,AGO,Angola,AGO,Angola,Angola_AGO
+Antigua & Barbuda,Full,ATG,Antigua and Barbuda,ATG,Antigua and Barbuda,ATG,AntiguaandBarbuda,ATG,Antigua and Barbuda,Antigua and Barbuda_ATG
+Aruba,Partial,ABW,Aruba,ABW,Netherlands,NLD,Aruba,ABW,Aruba,Aruba_ABW
+Australia,Full,AUS,Australia,AUS,Australia,AUS,Australia,AUS,Australia,Australia_AUS
+Bahrain,Partial,BHR,Bahrain,BHR,Bahrain,BHR,Bahrain,BHR,Bahrain,Bahrain_BHR
+Bangladesh,Full,BGD,Bangladesh,BGD,Bangladesh,BGD,Bangladesh,BGD,Bangladesh,Bangladesh_BGD
+Barbados,Partial,BRB,Barbados,BRB,Barbados,BRB,Barbados,BRB,Barbados,Barbados_BRB
+Belize,Full,BLZ,Belize,BLZ,Belize,BLZ,Belize,BLZ,Belize,Belize_BLZ
+Benin,Full,BEN,Benin,BEN,Benin,BEN,Benin,BEN,Benin,Benin_BEN
+Bermuda,Partial,BMU,Bermuda,BMU,United Kingdom,GBR,Bermuda,BMU,Bermuda,Bermuda_BMU
+Brazil,Full,BRA,Brazil,BRA,Brazil,BRA,Brazil,BRA,Brazil,Brazil_BRA
+Brunei,Full,BRN,Brunei,BRN,Brunei,BRN,BruneiDarussalam,BRN,Brunei,Brunei_BRN
+Cambodia,Full,KHM,Cambodia,KHM,Cambodia,KHM,Cambodia,KHM,Cambodia,Cambodia_KHM
+Cameroon,Full,CMR,Cameroon,CMR,Cameroon,CMR,Cameroon,CMR,Cameroon,Cameroon_CMR
+Cayman Is.,Full,CYM,Cayman Islands,CYM,United Kingdom,GBR,CaymanIslands,CYM,Cayman Islands,Cayman Islands_CYM
+China,Full,CHN,China,CHN,China,CHN,China,CHN,China,China_CHN
+Colombia,Full,COL,Colombia,COL,Colombia,COL,Colombia,COL,Colombia,Colombia_COL
+Comoros,Partial,COM,Comores,COM,Comores,COM,Comoros,COM,Comores,Comores_COM
+"Congo, DRC",Full,COD,Democratic Republic of the Congo,COD,Democratic Republic of the Congo,COD,DemocraticRepublicoftheCongo,COD,Democratic Republic of the Congo,Democratic Republic of the Congo_COD
+Costa Rica,Full,CRI,Costa Rica,CRI,Costa Rica,CRI,CostaRica,CRI,Costa Rica,Costa Rica_CRI
+Cote d'Ivoire,Full,CIV,Ivory Coast,CIV,Ivory Coast,CIV,CotedIvoire,CIV,Ivory Coast,Ivory Coast_CIV
+Cuba,Full,CUB,Cuba,CUB,Cuba,CUB,Cuba,CUB,Cuba,Cuba_CUB
+Curacao,Partial,CUW,Curacao,CUW,Netherlands,NLD,NetherlandsAntilles,CUW,Curacao,Curacao_CUW
+Djibouti,Partial,DJI,Djibouti,DJI,Djibouti,DJI,Djibouti,DJI,Djibouti,Djibouti_DJI
+Dominica,Partial,DMA,Dominica,DMA,Dominica,DMA,Dominica,DMA,Dominica,Dominica_DMA
+Dominican Republic,Full,DOM,Dominican Republic,DOM,Dominican Republic,DOM,DominicanRepublic,DOM,Dominican Republic,Dominican Republic_DOM
+Ecuador,Full,ECU,Ecuador,ECU,Ecuador,ECU,Ecuador,ECU,Ecuador,Ecuador_ECU
+Egypt,Partial,EGY,Egypt,EGY,Egypt,EGY,Egypt,EGY,Egypt,Egypt_EGY
+El Salvador,Full,SLV,El Salvador,SLV,El Salvador,SLV,El Salvador,SLV,El Salvador,El Salvador_SLV
+Equatorial Guinea,Full,GNQ,Equatorial Guinea,GNQ,Equatorial Guinea,GNQ,EquatorialGuinea,GNQ,Equatorial Guinea,Equatorial Guinea_GNQ
+Eritrea,Full,ERI,Eritrea,ERI,Eritrea,ERI,Eritrea,ERI,Eritrea,Eritrea_ERI
+Fiji,Full,FJI,Fiji,FJI,Fiji,FJI,Fiji,FJI,Fiji,Fiji_FJI
+France,Full,FRA,France,FRA,France,FRA,France,FRA,France,France_FRA
+French Polynesia,Partial,PYF,French Polynesia,PYF,France,FRA,FrenchPolynesia,PYF,French Polynesia,French Polynesia_PYF
+Gabon,Full,GAB,Gabon,GAB,Gabon,GAB,Gabon,GAB,Gabon,Gabon_GAB
+Gambia,Full,GMB,Gambia,GMB,Gambia,GMB,Gambia,GMB,Gambia,Gambia_GMB
+Ghana,Full,GHA,Ghana,GHA,Ghana,GHA,Ghana,GHA,Ghana,Ghana_GHA
+Grenada,Partial,GRD,Grenada,GRD,Grenada,GRD,Grenada,GRD,Grenada,Grenada_GRD
+Guam,Partial,GUM,Guam,GUM,United States,USA,Guam,GUM,Guam,Guam_GUM
+Guatemala,Full,GTM,Guatemala,GTM,Guatemala,GTM,Guatemala,GTM,Guatemala,Guatemala_GTM
+Guinea,Full,GIN,Guinea,GIN,Guinea,GIN,Guinea,GIN,Guinea,Guinea_GIN
+Guinea-Bissau,Full,GNB,Guinea-Bissau,GNB,Guinea-Bissau,GNB,GuineaBissau,GNB,Guinea-Bissau,Guinea-Bissau_GNB
+Guyana,Full,GUY,Guyana,GUY,Guyana,GUY,Guyana,GUY,Guyana,Guyana_GUY
+Haiti,Full,HTI,Haiti,HTI,Haiti,HTI,Haiti,HTI,Haiti,Haiti_HTI
+Honduras,Full,HND,Honduras,HND,Honduras,HND,Honduras,HND,Honduras,Honduras_HND
+India,Full,IND,India,IND,India,IND,India,IND,India,India_IND
+Indonesia,Full,IDN,Indonesia,IDN,Indonesia,IDN,Indonesia,IDN,Indonesia,Indonesia_IDN
+Iran,Full,IRN,Iran,IRN,Iran,IRN,IranIslamicRepublicof,IRN,Iran,Iran_IRN
+Jamaica,Full,JAM,Jamaica,JAM,Jamaica,JAM,Jamaica,JAM,Jamaica,Jamaica_JAM
+Japan,Full,JPN,Japan,JPN,Japan,JPN,Japan,JPN,Japan,Japan_JPN
+Kenya,Full,KEN,Kenya,KEN,Kenya,KEN,Kenya,KEN,Kenya,Kenya_KEN
+Kiribati,Partial,KIR,Gilbert Islands,KIR,Kiribati,KIR,Kiribati,KIR,Gilbert Islands,Gilbert Islands_KIR
+Liberia,Full,LBR,Liberia,LBR,Liberia,LBR,Liberia,LBR,Liberia,Liberia_LBR
+Madagascar,Full,MDG,Madagascar,MDG,Madagascar,MDG,Madagascar,MDG,Madagascar,Madagascar_MDG
+Malaysia,Full,MYS,Malaysia,MYS,Malaysia,MYS,Malaysia,MYS,Malaysia,Malaysia_MYS
+Maldives,Partial,MDV,Maldives,MDV,Maldives,MDV,Maldives,MDV,Maldives,Maldives_MDV
+Marshall Islands,Partial,MHL,Marshall Islands,MHL,Marshall Islands,MHL,MarshallIslands,MHL,Marshall Islands,Marshall Islands_MHL
+Mauritania,Partial,MRT,Mauritania,MRT,Mauritania,MRT,Mauritania,MRT,Mauritania,Mauritania_MRT
+Mauritius,Partial,MUS,Republic of Mauritius,MUS,Republic of Mauritius,MUS,Mauritius,MUS,Republic of Mauritius,Republic of Mauritius_MUS
+Mexico,Full,MEX,Mexico,MEX,Mexico,MEX,Mexico,MEX,Mexico,Mexico_MEX
+Micronesia,Full,FSM,Micronesia,FSM,Micronesia,FSM,MicronesiaFederatedStatesof,FSM,Micronesia,Micronesia_FSM
+Mozambique,Full,MOZ,Mozambique,MOZ,Mozambique,MOZ,Mozambique,MOZ,Mozambique,Mozambique_MOZ
+Myanmar,Full,MMR,Myanmar,MMR,Myanmar,MMR,Burma,MMR,Myanmar,Myanmar_MMR
+Netherlands,Partial,NLD,Netherlands,NLD,Netherlands,NLD,,NLD,Netherlands,Netherlands_NLD
+New Caledonia,Full,NCL,New Caledonia,NCL,France,FRA,NewCaledonia,NCL,New Caledonia,New Caledonia_NCL
+New Zealand,Full,NZL,New Zealand,NZL,New Zealand,NZL,NewZealand,NZL,New Zealand,New Zealand_NZL
+Nicaragua,Full,NIC,Nicaragua,NIC,Nicaragua,NIC,Nicaragua,NIC,Nicaragua,Nicaragua_NIC
+Nigeria,Full,NGA,Nigeria,NGA,Nigeria,NGA,Nigeria,NGA,Nigeria,Nigeria_NGA
+Oman,Partial,OMN,Oman,OMN,Oman,OMN,Oman,OMN,Oman,Oman_OMN
+Pakistan,Full,PAK,Pakistan,PAK,Pakistan,PAK,Pakistan,PAK,Pakistan,Pakistan_PAK
+Palau,Full,PLW,Palau,PLW,Palau,PLW,Palau,PLW,Palau,Palau_PLW
+Panama,Full,PAN,Panama,PAN,Panama,PAN,Panama,PAN,Panama,Panama_PAN
+Papua New Guinea,Full,PNG,Papua New Guinea,PNG,Papua New Guinea,PNG,PapuaNewGuinea,PNG,Papua New Guinea,Papua New Guinea_PNG
+Peru,Full,PER,Peru,PER,Peru,PER,Peru,PER,Peru,Peru_PER
+Philippines,Full,PHL,Philippines,PHL,Philippines,PHL,Philippines,PHL,Philippines,Philippines_PHL
+Puerto Rico,Full,PRI,Puerto Rico,PRI,United States,USA,PuertoRico,PRI,Puerto Rico,Puerto Rico_PRI
+Qatar,Partial,QAT,Qatar,QAT,Qatar,QAT,Qatar,QAT,Qatar,Qatar_QAT
+Republic of Congo,Full,COG,Republic of the Congo,COG,Republic of the Congo,COG,Congo,COG,Republic of the Congo,Republic of the Congo_COG
+Saint Martin,Partial,MAF,Collectivity of Saint Martin,MAF,France,FRA,SaintMartin,MAF,Collectivity of Saint Martin,Collectivity of Saint Martin_MAF
+Saint Vincent and the Grenadines,Partial,VCT,Saint Vincent and the Grenadines,VCT,Saint Vincent and the Grenadines,VCT,SaintVincentandtheGrenadines,VCT,Saint Vincent and the Grenadines,Saint Vincent and the Grenadines_VCT
+Samoa,Partial,WSM,Samoa,WSM,Samoa,WSM,Samoa,WSM,Samoa,Samoa_WSM
+Sao Tome and Principe,Partial,STP,Sao Tome and Principe,STP,Sao Tome and Principe,STP,SaoTomeandPrincipe,STP,Sao Tome and Principe,Sao Tome and Principe_STP
+Saudi Arabia,Full,SAU,Saudi Arabia,SAU,Saudi Arabia,SAU,SaudiArabia,SAU,Saudi Arabia,Saudi Arabia_SAU
+Senegal,Full,SEN,Senegal,SEN,Senegal,SEN,Senegal,SEN,Senegal,Senegal_SEN
+Seychelles,Partial,SYC,Seychelles,SYC,Seychelles,SYC,Seychelles,SYC,Seychelles,Seychelles_SYC
+Sierra Leone,Full,SLE,Sierra Leone,SLE,Sierra Leone,SLE,SierraLeone,SLE,Sierra Leone,Sierra Leone_SLE
+Singapore,Partial,SGP,Singapore,SGP,Singapore,SGP,Singapore,SGP,Singapore,Singapore_SGP
+Sint Maarten,Partial,SXM,Sint-Maarten,SXM,Netherlands,NA,NA,SXM,Sint-Maarten,Sint-Maarten_SXM
+Solomon Is.,Full,SLB,Solomon Islands,SLB,Solomon Islands,SLB,SolomonIslands,SLB,Solomon Islands,Solomon Islands_SLB
+Somalia,Full,SOM,Federal Republic of Somalia,SOM,Federal Republic of Somalia,SOM,Somalia,SOM,Federal Republic of Somalia,Federal Republic of Somalia_SOM
+South Africa,Full,ZAF,South Africa,ZAF,South Africa,ZAF,SouthAfrica,ZAF,South Africa,South Africa_ZAF
+Sri Lanka,Full,LKA,Sri Lanka,LKA,Sri Lanka,LKA,Sri Lanka,LKA,Sri Lanka,Sri Lanka_LKA
+St. Kitts & Nevis,Partial,KNA,Saint Kitts and Nevis,KNA,Saint Kitts and Nevis,KNA,SaintKittsandNevis,KNA,Saint Kitts and Nevis,Saint Kitts and Nevis_KNA
+St. Lucia,Partial,LCA,Saint Lucia,LCA,Saint Lucia,LCA,SaintLucia,LCA,Saint Lucia,Saint Lucia_LCA
+Sudan,Full,SDN,Sudan,SDN,Sudan,SDN,Sudan,SDN,Sudan,Sudan_SDN
+Suriname,Full,SUR,Suriname,SUR,Suriname,SUR,Suriname,SUR,Suriname,Suriname_SUR
+Taiwan,Partial,TWN,Taiwan,TWN,Taiwan,TWN,Taiwan,TWN,Taiwan,Taiwan_TWN
+Tanzania,Full,TZA,Tanzania,TZA,Tanzania,TZA,UnitedRepublicofTanzania,TZA,Tanzania,Tanzania_TZA
+Thailand,Full,THA,Thailand,THA,Thailand,THA,Thailand,THA,Thailand,Thailand_THA
+The Bahamas,Full,BHS,Bahamas,BHS,Bahamas,BHS,Bahamas,BHS,Bahamas,Bahamas_BHS
+Timor-Leste,Full,TLS,East Timor,TLS,East Timor,TLS,TimorLeste,TLS,East Timor,East Timor_TLS
+Togo,Partial,TGO,Togo,TGO,Togo,TGO,Togo,TGO,Togo,Togo_TGO
+Tonga,Full,TON,Tonga,TON,Tonga,TON,Tonga,TON,Tonga,Tonga_TON
+Trinidad & Tobago,Full,TTO,Trinidad and Tobago,TTO,Trinidad and Tobago,TTO,TrinidadandTobago,TTO,Trinidad and Tobago,Trinidad and Tobago_TTO
+Turks & Caicos Is.,Full,TCA,Turks and Caicos Islands,TCA,United Kingdom,GBR,TurksandCaicosIslands,TCA,Turks and Caicos Islands,Turks and Caicos Islands_TCA
+Tuvalu,Partial,TUV,Tuvalu,TUV,Tuvalu,TUV,Tuvalu,TUV,Tuvalu,Tuvalu_TUV
+United Arab Emirates,Full,ARE,United Arab Emirates,ARE,United Arab Emirates,ARE,UnitedArabEmirates,ARE,United Arab Emirates,United Arab Emirates_ARE
+United Kingdom,Partial,GBR,United Kingdom,GBR,United Kingdom,GBR,UnitedKingdom,GBR,United Kingdom,United Kingdom_GBR
+United States,Full,USA,United States,USA,United States,USA,UnitedStates,USA,United States,United States_USA
+United States Virgin Islands,Partial,VIR,United States Virgin Islands,VIR,United States,USA,UnitedStatesVirginIslands,VIR,United States Virgin Islands,United States Virgin Islands_VIR
+Vanuatu,Full,VUT,Vanuatu,VUT,Vanuatu,VUT,Vanuatu,VUT,Vanuatu,Vanuatu_VUT
+Venezuela,Full,VEN,Venezuela,VEN,Venezuela,VEN,Venezuela,VEN,Venezuela,Venezuela_VEN
+Vietnam,Full,VNM,Vietnam,VNM,Vietnam,VNM,Vietnam,VNM,Vietnam,Vietnam_VNM
+"Virgin Islands, British",Partial,VGB,British Virgin Islands,VGB,United Kingdom,GBR,BritishVirginIslands,VGB,British Virgin Islands,British Virgin Islands_VGB
+Yemen,Full,YEM,Yemen,YEM,Yemen,YEM,Yemen,YEM,Yemen,Yemen_YEM

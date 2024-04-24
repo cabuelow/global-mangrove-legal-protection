@@ -4,5 +4,6 @@
 .httr-oauth
 .DS_Store
 .quarto
-data
+data/EEZ_Boundaries
+data/covariate-data
 outputs
