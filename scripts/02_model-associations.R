@@ -141,7 +141,7 @@ for(h in seq_along(gap)){
   
   m <- sampleMcmc(m, thin = 10, samples = 10000, transient = 10000, nChains = 4, nParallel = 4) # bump up to 10000 for final run
   saveRDS(m, paste0('outputs/model-associations/models/mod-multivar-regression_', gap[h], '.rds')) # save model
-  #m<- readRDS(paste0('outputs/models/mod-multivar-regression_', gap[h], '.rds'))
+  #m <- readRDS(paste0('outputs/model-associations/models/mod-multivar-regression_', gap[h], '.rds'))
   
   # check mcmc convergence
   mpost <- convertToCodaObject(m)
@@ -224,6 +224,7 @@ for(h in seq_along(gap)){
     mutate(p_direction_plot = ifelse(mean>0, p_direction, 1-p_direction)) %>% 
     mutate(label = ifelse(evidence == 'Yes', p_direction, NA)) %>% 
     mutate(label = round(label, 2)*100) %>%
+    mutate(label = ifelse(direction == 'Negative' & evidence == 'Yes', -label, label)) %>% 
     mutate(predictor = recode(predictor, "Government_typeNot fully independent" = 'Not fully indep- endent',
                               "Government_typeFederal" = 'Federal',
                               #extent_norm = 'Relative extent', Government_type = 'Government type', Ecoservice = 'Eco- service', GDP_pc_norm = 'GDP per capita')) %>% 
