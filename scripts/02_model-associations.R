@@ -34,7 +34,7 @@ World <- World[!duplicated(World$Jurisdiction),] # remove duplicates from offset
 # read in policy data and wrangle for analysis
 dat <- read.csv('data/law-policy-database.csv') %>% 
   left_join(codes, 'Country') %>% 
-  left_join(select(nat_covar, Country, WB_REGION, gmw_area_2020_ha:total_carbon_storage_MtC02e, GDP_year:fisher_days_yr), by = 'Country') %>%
+  left_join(select(nat_covar, Country, WB_REGION, gmw_area_2020_ha:total_carbon_storage_MtC02e, GDPPC_PPP_CI:fisher_days_yr), by = 'Country') %>%
   filter(Type_assessment == 'Full') %>% # choose only jurisdictions that were fully assessed for laws/policies
   mutate(extent = gmw_area_2020_ha*(Shoreline_length_m/jurisdiction_area_ha),# standardise mangrove area
          people_protected = protection_num_people/gmw_area_2020_ha, # people protected per hectare of mangroves
@@ -47,8 +47,8 @@ dat <- read.csv('data/law-policy-database.csv') %>%
                                      Federal_status == 'N' ~ 'Unitary independent',
                                      Territory_status == 3 ~ 'Not fully independent',
                                      .default = NA)) %>% # combine federal status and territory into one variable
-  mutate(across(c(people_protected, property_protected, Carbon, Fishing_med, Fishing_min, Fishing_max, extent, GDP_pc), ~ logtrans(.))) %>% # log transform skewed variables
-  mutate(across(c(people_protected, property_protected, Carbon, Fishing_med, Fishing_min, Fishing_max, extent, GDP_pc), scale, .names = '{.col}_norm')) %>%  # mean center and scale continuous variables
+  mutate(across(c(people_protected, property_protected, Carbon, Fishing_med, Fishing_min, Fishing_max, extent, GDPPC_PPP_CI), ~ logtrans(.))) %>% # log transform skewed variables
+  mutate(across(c(people_protected, property_protected, Carbon, Fishing_med, Fishing_min, Fishing_max, extent, GDPPC_PPP_CI), scale, .names = '{.col}_norm')) %>%  # mean center and scale continuous variables
   mutate_at(vars(Mangrove_policy, Clearing_restrictions, Community_management, Environmental_impact_assessment), ~ifelse(. == 'N', 0, 1)) %>% 
   mutate(Clearing_restrictions = case_when(Clearing_restrictions_level == '2' ~ 2,
                                            Clearing_restrictions_level %in% c('3A', '3B') ~ 3,
@@ -95,8 +95,7 @@ dat$Governance_norm = get_pca_ind(govpca)$coord[,1]
   
 # check collinearity of all covariates
 
-#ggcorr(select(dat, extent_norm, GDP_pc_norm, ecoserv_med_norm, ecoserv_min_norm, ecoserv_max_norm, Governance_norm), c('pairwise', 'pearson'), label = T)
-ggcorr(select(dat, extent_norm, GDP_pc_norm, Carbon_norm, Fishing_med_norm, Fishing_min_norm, Fishing_max_norm, Protection_norm, Governance_norm), c('pairwise', 'pearson'), label = T)
+ggcorr(select(dat, extent_norm, GDPPC_PPP_CI_norm, Carbon_norm, Fishing_med_norm, Fishing_min_norm, Fishing_max_norm, Protection_norm, Governance_norm), c('pairwise', 'pearson'), label = T)
 
 write.csv(dat, 'data/model-data.csv', row.names = F)
 dat <- read.csv('data/model-data.csv')
@@ -121,7 +120,7 @@ for(h in seq_along(gap)){
   
   # set up multivariate response and covariates
   y <- as.matrix(dat2 %>% select(Mangrove_policy:Environmental_impact_assessment))
-  x <- dat2 %>% select(extent_norm, GDP_pc_norm, Fishing, Protection_norm, Carbon_norm, Government_type) %>% 
+  x <- dat2 %>% select(extent_norm, GDPPC_PPP_CI_norm, Fishing, Protection_norm, Carbon_norm, Government_type) %>% 
   #x <- dat2 %>% select(extent_norm, GDP_pc_norm, Ecoservice, Government_type, WB_REGION) %>% 
     mutate(Government_type = as.factor(Government_type)) %>% 
     mutate(Government_type = relevel(Government_type, ref = 'Unitary independent'))  # make unitary independent the reference level
@@ -173,7 +172,7 @@ for(h in seq_along(gap)){
   vardf$cat <- c(colnames(m$XData), 'Residual correlations', 'Geographic region')
   vardf.long <- vardf %>%
     pivot_longer(Mangrove_policy:Environmental_impact_assessment, names_to = 'Law', values_to = 'Variance_prop') %>% 
-    mutate(cat = recode(cat, extent_norm = 'Relative extent', Government_type = 'Government type', GDP_pc_norm = 'GDP per capita', Protection_norm = 'Coastal protection', Carbon_norm = 'Carbon stocks', Fishing = 'Fisheries')) %>% 
+    mutate(cat = recode(cat, extent_norm = 'Relative extent', Government_type = 'Government type', GDPPC_PPP_CI_norm = 'GDP per capita', Protection_norm = 'Coastal protection', Carbon_norm = 'Carbon stocks', Fishing = 'Fisheries')) %>% 
     #mutate(cat = recode(cat, extent_norm = 'Relative extent', WB_REGION = 'Geographic region', Government_type = 'Government type', GDP_pc_norm = 'GDP per capita')) %>% 
     mutate(cat = factor(cat, levels = c('Residual correlations', 'Relative extent', 'Coastal protection', 'Fisheries', 'Carbon stocks', 'GDP per capita', 'Government type', 'Geographic region')),
     #mutate(cat = factor(cat, levels = c('Residual correlations', 'Relative extent', 'Ecoservice', 'GDP per capita', 'Government type', 'Geographic region')),
@@ -228,7 +227,7 @@ for(h in seq_along(gap)){
     mutate(predictor = recode(predictor, "Government_typeNot fully independent" = 'Not fully indep- endent',
                               "Government_typeFederal" = 'Federal',
                               #extent_norm = 'Relative extent', Government_type = 'Government type', Ecoservice = 'Eco- service', GDP_pc_norm = 'GDP per capita')) %>% 
-                              extent_norm = 'Relative extent', Government_type = 'Government type', GDP_pc_norm = 'GDP per capita', Protection_norm = 'Coastal prot- ection', Carbon_norm = 'Carbon stocks', Fishing = 'Fisheries')) %>% 
+                              extent_norm = 'Relative extent', Government_type = 'Government type', GDPPC_PPP_CI_norm = 'GDP per capita', Protection_norm = 'Coastal prot- ection', Carbon_norm = 'Carbon stocks', Fishing = 'Fisheries')) %>% 
     mutate(response = recode(response, Mangrove_policy = 'Mangrove policy', Environmental_impact_assessment = 'EIA',
                              Coastal_zone_planning = 'Coastal planning', Community_management = 'Community management',
                              Clearing_restrictions = 'Cutting restrictions', Coordination_mechanism = 'Coordination mechanisms')) %>% 
@@ -402,7 +401,7 @@ for(h in seq_along(gap)){
                   labels =  c('Missing', 'Unexpected'), border.alpha = 0, size = 0.4) +
     tm_layout(legend.position = c(0,0), panel.label.size = 0.4, legend.text.size = 0.3)
   m2
-  tmap_save(m2, paste0('outputs/model-associations/maps/missing-unexpected_all_', gap[h], '.png'), width = 4, height = 2, dpi = 1000)
+  tmap_save(m2, paste0('outputs/model-associations/maps/missing-unexpected_all_', gap[h], '_newgdp.png'), width = 4, height = 2, dpi = 1000)
   
 }
 
@@ -410,6 +409,7 @@ for(h in seq_along(gap)){
 probs <- do.call(rbind, lapply(list.files('outputs/model-associations/', pattern = 'p_direction', full.names = T), read.csv)) %>% 
   mutate(p_direction = round(p_direction, 2)*100) %>% 
   filter(model %in% gap) %>% 
+  distinct() %>% 
   pivot_wider(id_cols = c(predictor, response), names_from = 'model', values_from = c('p_direction', 'evidence')) %>% 
   #mutate(Deviation_max_gapfill = p_direction_ecoserv_max_norm - p_direction_ecoserv_med_norm,
    #     Deviation_min_gapfill = p_direction_ecoserv_min_norm - p_direction_ecoserv_med_norm) %>% 
