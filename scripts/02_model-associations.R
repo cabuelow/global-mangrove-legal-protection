@@ -407,7 +407,7 @@ for(h in seq_along(gap)){
 
 # make a table of probabilities of association and save
 probs <- do.call(rbind, lapply(list.files('outputs/model-associations/', pattern = 'p_direction', full.names = T), read.csv)) %>% 
-  mutate(p_direction = round(p_direction, 2)*100) %>% 
+  mutate(p_direction = round(p_direction, 3)*100) %>% 
   filter(model %in% gap) %>% 
   distinct() %>% 
   pivot_wider(id_cols = c(predictor, response), names_from = 'model', values_from = c('p_direction', 'evidence')) %>% 
@@ -428,7 +428,7 @@ probs <- do.call(rbind, lapply(list.files('outputs/model-associations/', pattern
   filter(Predictor_variable %in% c('Carbon stocks', 'GDP per capita', 'Fisheries', 'Coastal prot- ection', 'Relative extent')) %>% 
   mutate(Predictor_variable = factor(Predictor_variable, levels = c('Relative extent', 'Coastal prot- ection', 'Fisheries', 'Carbon stocks', 'GDP per capita')))
 
-write.csv(probs, 'outputs/model-associations/probability-association-table_fishing.csv', row.names = F)
+write.csv(probs, 'outputs/model-associations/probability-association-table_fishing_v2.csv', row.names = F)
 #write.csv(probs, 'outputs/model-associations/probability-association-table_ecoservice.csv', row.names = F)
 
 
